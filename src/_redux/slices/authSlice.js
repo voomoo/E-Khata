@@ -16,6 +16,7 @@ export const initialState = {
   loading: false,
   hasError: false,
   user: {},
+  expenses: [],
 };
 
 // A slice for recipes with our 3 reducers
@@ -31,6 +32,15 @@ const userAuthSlice = createSlice({
       state.loading = false;
       state.hasError = false;
     },
+    getExpensesSuccess: (state, { payload }) => {
+      state.expenses = payload?.data;
+      state.loading = false;
+      state.hasError = false;
+    },
+    postExpenseSuccess: (state) => {
+      state.loading = false;
+      state.hasError = false;
+    },
     getUserAuthFailure: (state) => {
       state.loading = false;
       state.hasError = true;
@@ -39,8 +49,13 @@ const userAuthSlice = createSlice({
 });
 
 //three actions generated from this slice
-export const { getUserAuth, getUserAuthSuccess, getUserAuthFailure } =
-  userAuthSlice.actions;
+export const {
+  getUserAuth,
+  getUserAuthSuccess,
+  getUserAuthFailure,
+  getExpensesSuccess,
+  postExpenseSuccess,
+} = userAuthSlice.actions;
 
 //A selector
 export const userSelector = (state) => state.userAuth;
@@ -118,5 +133,76 @@ export const logoutUser = (navigate) => {
     dispatch(getUserAuthSuccess({}));
     navigate("/login");
     toast.success("Logout Success");
+  };
+};
+
+export const fetchExpenses = () => {
+  return async (dispatch, getState) => {
+    //start fetching by setting the loading state to true
+    dispatch(getUserAuth());
+
+    try {
+      const response = await Axios.get("/expense-tracker", {
+        headers: { "x-access-token": getState().userAuth.user.user.token },
+      });
+      console.log(getState().userAuth.user.user.token);
+      if (response.data.success) {
+        //if login success then save the response data in user state
+        dispatch(getExpensesSuccess(response.data));
+      } else {
+        dispatch(getUserAuthFailure());
+      }
+    } catch (error) {
+      //if error found set hasError state
+      dispatch(getUserAuthFailure());
+      console.log(error);
+    }
+  };
+};
+
+export const postExpense = (payload) => {
+  return async (dispatch, getState) => {
+    //start fetching by setting the loading state to true
+    dispatch(getUserAuth());
+
+    try {
+      const res = await Axios.post("/expense-tracker", payload, {
+        headers: { "x-access-token": getState().userAuth.user.user.token },
+      });
+      if (res.data.success) {
+        //if login success then save the response data in user state
+        dispatch(fetchExpenses());
+        dispatch(postExpenseSuccess());
+      } else {
+        dispatch(getUserAuthFailure());
+      }
+    } catch (error) {
+      //if error found set hasError state
+      dispatch(getUserAuthFailure());
+      console.log(error);
+    }
+  };
+};
+
+export const deleteExpense = (id) => {
+  return async (dispatch, getState) => {
+    //start fetching by setting the loading state to true
+    dispatch(getUserAuth());
+
+    try {
+      const res = await Axios.delete(`/expense-tracker/${id}`, {
+        headers: { "x-access-token": getState().userAuth.user.user.token },
+      });
+      if (res.data.success) {
+        //if login success then save the response data in user state
+        dispatch(postExpenseSuccess());
+      } else {
+        dispatch(getUserAuthFailure());
+      }
+    } catch (error) {
+      //if error found set hasError state
+      dispatch(getUserAuthFailure());
+      console.log(error);
+    }
   };
 };

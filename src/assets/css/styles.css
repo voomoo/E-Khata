@@ -12,6 +12,13 @@
   height: 100vh;
 }
 
+.dashboard .logo-container {
+  max-height: 100px;
+  padding: 20px 40px;
+  position: sticky;
+  top: 0px;
+}
+
 .login .logo {
   max-width: 200px;
   margin-bottom: 25px;
@@ -72,10 +79,49 @@
   flex-direction: column;
   align-items: center;
   max-width: 250px;
+  margin-top: 120px;
+  padding: 15px 0px;
+}
+
+.dashboard .user-card h4 {
+  color: #5c5c5c;
 }
 
 .dashboard .user-card img {
   width: 64px;
   border: 3px solid gray;
   border-radius: 50%;
+}
+
+.dashboard .user-card .column {
+  padding: 10px 20px !important;
+  text-align: right;
+}
+
+.dashboard .user-card .column h5 {
+  color: #b1b1b1;
+}
+
+.dashboard .add-btn {
+  width: 250px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+.dashboard .sideInfo {
+  position: sticky;
+  top: 120px;
+}
+.dashboard .dashboard-body {
+  margin-top: 90px;
+}
+
+.expense-card {
+  margin: 10px 0px 5px;
+}
+
+.expense-card h5 {
+  text-transform: capitalize;
 }

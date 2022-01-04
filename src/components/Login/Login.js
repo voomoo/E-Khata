@@ -18,9 +18,6 @@ import {
   Loader,
 } from "semantic-ui-react";
 
-//images import
-import login from "../../assets/images/authSidePic.svg";
-import logo from "../../assets/images/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -48,7 +45,7 @@ const Login = () => {
       <Container>
         <Grid verticalAlign="middle" centered>
           <Grid.Column computer={8}>
-            <Image className="logo" src={logo} />
+            <Image className="logo" src="./images/logo.svg" />
             <h3>Welcome to E-Khata</h3>
             <h5>Your online expense management companion</h5>
             <Form onSubmit={handleSubmit}>
@@ -77,7 +74,7 @@ const Login = () => {
             </Form>
           </Grid.Column>
           <Grid.Column computer={8}>
-            <Image src={login} fluid />
+            <Image src="./images/authSidePic.svg" fluid />
           </Grid.Column>
         </Grid>
       </Container>
