@@ -196,6 +196,7 @@ export const deleteExpense = (id) => {
       if (res.data.success) {
         //if login success then save the response data in user state
         dispatch(postExpenseSuccess());
+        window.location.reload();
       } else {
         dispatch(getUserAuthFailure());
       }
