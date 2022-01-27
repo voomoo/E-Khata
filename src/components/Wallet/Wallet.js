@@ -1,27 +1,20 @@
 import {
-    Button,
     Container,
     Grid,
     Dimmer,
     Loader,
-    Dropdown,
     Icon,
   } from "semantic-ui-react";
-  import { FiEdit, FiSettings } from "react-icons/fi";
-  import { FaRegPlusSquare } from "react-icons/fa";
-  import { FaWallet } from "react-icons/fa";
-  import { useNavigate } from "react-router-dom";
+  import { FiSettings } from "react-icons/fi";
   import { useDispatch, useSelector } from "react-redux";
   import {
     fetchExpenses,
     getUserAuthSuccess,
     userSelector,
   } from "../../_redux/slices/authSlice";
-  import { logoutUser } from "../../_redux/slices/authSlice";
   import ExpenseCard from "../ExpenseCard/ExpenseCard";
   import TransactionModal from "../TransectionModal/TransactionModal";
   import { useEffect, useState } from "react";
-  import { getAllExpenses } from "../../api/apiRequest";
   import { GiToolbox, GiWallet } from "react-icons/gi";
   import { IoLogoGameControllerB } from "react-icons/io";
   import { Fab, Action } from "react-tiny-fab";
@@ -48,22 +41,23 @@ import Navbar from "../Navbar/Navbar";
   
     useEffect(() => {
       setExpenseState([...expenses]);
-    }, [expenses]);
+    }, [expenses]); 
   
     useEffect(() => {
       const userCookie = cookies.get("user");
       if (userCookie !== undefined) {
         dispatch(getUserAuthSuccess(userCookie));
       }
-    }, []);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);  
   
     useEffect(() => {
       if (!open) {
         dispatch(fetchExpenses());
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
   
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
   
@@ -180,7 +174,6 @@ import Navbar from "../Navbar/Navbar";
               >
                 <Action
                   text="Add Income"
-                  onClick={() => console.warn("Clicked")}
                   style={{ background: "#388e3c" }}
                   onClick={(e) => newTransactHandler("income")}
                 >
@@ -188,7 +181,6 @@ import Navbar from "../Navbar/Navbar";
                 </Action>
                 <Action
                   text="Add Expense"
-                  onClick={() => console.warn("Clicked")}
                   style={{ background: "#d32f2f" }}
                   onClick={(e) => newTransactHandler("expense")}
                 >

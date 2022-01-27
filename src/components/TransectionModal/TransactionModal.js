@@ -99,6 +99,7 @@ const TransactionModal = ({
   };
   useEffect(() => {
     setTransValues({ ...transValues, accountType: type });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
   return (
     <div>
