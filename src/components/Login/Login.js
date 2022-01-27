@@ -44,7 +44,7 @@ const Login = () => {
       </Dimmer>
       <Container>
         <Grid verticalAlign="middle" centered>
-          <Grid.Column computer={8}>
+          <Grid.Column computer={8} mobile={16}>
             <Image className="logo" src="./images/logo.svg" />
             <h3>Welcome to E-Khata</h3>
             <h5>Your online expense management companion</h5>
@@ -73,7 +73,7 @@ const Login = () => {
               </Button>
             </Form>
           </Grid.Column>
-          <Grid.Column computer={8}>
+          <Grid.Column computer={8} mobile={16}>
             <Image src="./images/authSidePic.svg" fluid />
           </Grid.Column>
         </Grid>

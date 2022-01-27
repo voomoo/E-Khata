@@ -3,9 +3,11 @@ import { RiFileEditFill, RiDeleteBin2Fill } from "react-icons/ri";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteExpense } from "../../_redux/slices/authSlice";
+import TransactionModal from "../TransectionModal/TransactionModal"
 
-const ExpenseCard = ({ id, title, date, description, amount, icon, color }) => {
+const ExpenseCard = ({ id, title, date, description, amount, category, icon, color }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const dispatch = useDispatch();
   const deleteHandler = () => {
     dispatch(deleteExpense(id));
@@ -21,11 +23,12 @@ const ExpenseCard = ({ id, title, date, description, amount, icon, color }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            textTransform:"capitalize"
           }}
         >
-          {color === "red" ? "Expense" : "Income"}
+          {color === "red" ? `Expense (৳ -${amount})` : `Income (৳ +${amount})`}
           <div>
-            <Button icon size="mini" color="yellow">
+            <Button icon size="mini" color="yellow" onClick={() => setOpen(!open)}>
               <RiFileEditFill />
             </Button>
             <Button
@@ -40,8 +43,8 @@ const ExpenseCard = ({ id, title, date, description, amount, icon, color }) => {
         </Label>
 
         <Grid style={{ marginTop: "10px" }}>
-          <Grid.Column width={2}>{icon}</Grid.Column>
-          <Grid.Column width={4}>
+          <Grid.Column computer={2} tablet={4}>{icon}</Grid.Column>
+          <Grid.Column computer={14} tablet={12}>
             <h5>{title}</h5>
             <small>
               {new Date(date).toLocaleDateString("en-US", {
@@ -51,15 +54,7 @@ const ExpenseCard = ({ id, title, date, description, amount, icon, color }) => {
                 day: "numeric",
               })}
             </small>
-          </Grid.Column>
-          <Grid.Column width={6}>
             <p>{description}</p>
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <h4>
-              {color === "red" ? "- ৳" : "+ ৳"}
-              {amount}
-            </h4>
           </Grid.Column>
         </Grid>
       </Segment>
@@ -81,6 +76,15 @@ const ExpenseCard = ({ id, title, date, description, amount, icon, color }) => {
           </Button>
         </Modal.Actions>
       </Modal>
+      <TransactionModal
+        open={open}
+        setOpen={setOpen}
+        type={color === "red" ? "expense" : "income"}
+        description={description}
+        category={category}
+        amount={amount}
+        operation = {id}
+      />
     </div>
   );
 };

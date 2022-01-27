@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "semantic-ui-react";
-import { postExpense } from "../../_redux/slices/authSlice";
+import { postExpense, updateExpense } from "../../_redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 
 const expenseCategory = [
@@ -68,6 +68,7 @@ const TransactionModal = ({
   description,
   category,
   amount,
+  operation
 }) => {
   const dispatch = useDispatch();
 
@@ -84,6 +85,16 @@ const TransactionModal = ({
       description: "",
       category: "",
       amount: 0,
+    });
+  };
+
+  const editHandler = () => {
+    dispatch(updateExpense(operation, transValues));
+    setTransValues({
+      accountType: type,
+      description: description,
+      category: category,
+      amount: amount,
     });
   };
   useEffect(() => {
@@ -105,6 +116,7 @@ const TransactionModal = ({
                 placeholder="Select Category"
                 label="Category"
                 width={8}
+                value={transValues.category}
                 onChange={(e, data) => {
                   setTransValues({ ...transValues, category: data.value });
                 }}
@@ -121,6 +133,7 @@ const TransactionModal = ({
                     amount: parseFloat(e.target.value),
                   });
                 }}
+                onFocus={e => e.target.select()}
               />
             </Form.Group>
             <Form.Group>
@@ -149,7 +162,12 @@ const TransactionModal = ({
             labelPosition="right"
             icon="checkmark"
             onClick={() => {
-              submitHandler();
+              if(operation === "create"){
+                submitHandler();
+              } else{
+                editHandler()
+              }
+              
               setOpen(false);
             }}
             positive

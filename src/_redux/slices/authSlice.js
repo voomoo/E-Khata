@@ -17,6 +17,10 @@ export const initialState = {
   hasError: false,
   user: {},
   expenses: [],
+  expensesRange:{
+    income:[],
+    expense: []
+  }
 };
 
 // A slice for recipes with our 3 reducers
@@ -37,6 +41,11 @@ const userAuthSlice = createSlice({
       state.loading = false;
       state.hasError = false;
     },
+    getExpensesRangeSuccess: (state, { payload }) => {
+      state.expensesRange = payload?.data;
+      state.loading = false;
+      state.hasError = false;
+    },
     postExpenseSuccess: (state) => {
       state.loading = false;
       state.hasError = false;
@@ -54,6 +63,7 @@ export const {
   getUserAuthSuccess,
   getUserAuthFailure,
   getExpensesSuccess,
+  getExpensesRangeSuccess,
   postExpenseSuccess,
 } = userAuthSlice.actions;
 
@@ -149,6 +159,32 @@ export const fetchExpenses = () => {
       if (response.data.success) {
         //if login success then save the response data in user state
         dispatch(getExpensesSuccess(response.data));
+        dispatch(fetchExpensesRange(30))
+      } else {
+        dispatch(getUserAuthFailure());
+      }
+    } catch (error) {
+      //if error found set hasError state
+      dispatch(getUserAuthFailure());
+      console.log(error);
+    }
+  };
+};
+
+export const fetchExpensesRange = (range) => {
+  return async (dispatch, getState) => {
+    //start fetching by setting the loading state to true
+    dispatch(getUserAuth());
+
+    try {
+      const response = await Axios.get(`/expense-tracker/expense-range?range=${range}`, {
+        headers: { "x-access-token": getState().userAuth.user.user.token },
+      });
+      console.log(getState().userAuth.user.user.token);
+      if (response.data.success) {
+        //if login success then save the response data in user state
+        dispatch(getExpensesRangeSuccess(response.data));
+        
       } else {
         dispatch(getUserAuthFailure());
       }
@@ -167,6 +203,34 @@ export const postExpense = (payload) => {
 
     try {
       const res = await Axios.post("/expense-tracker", payload, {
+        headers: { "x-access-token": getState().userAuth.user.user.token },
+      });
+      if (res.data.success) {
+        //if login success then save the response data in user state
+        let newUser = {success: true, user: res.data.user}
+        newUser.user.token = getState().userAuth.user.user.token
+        cookies.set("user", newUser);
+        dispatch(getUserAuthSuccess(newUser));
+        dispatch(fetchExpenses());
+        dispatch(postExpenseSuccess());
+      } else {
+        dispatch(getUserAuthFailure());
+      }
+    } catch (error) {
+      //if error found set hasError state
+      dispatch(getUserAuthFailure());
+      console.log(error);
+    }
+  };
+};
+
+export const updateExpense = (id, payload) => {
+  return async (dispatch, getState) => {
+    //start fetching by setting the loading state to true
+    dispatch(getUserAuth());
+
+    try {
+      const res = await Axios.put(`/expense-tracker/${id}`, payload, {
         headers: { "x-access-token": getState().userAuth.user.user.token },
       });
       if (res.data.success) {
@@ -195,6 +259,10 @@ export const deleteExpense = (id) => {
       });
       if (res.data.success) {
         //if login success then save the response data in user state
+        let newUser = {success: true, user: res.data.user}
+        newUser.user.token = getState().userAuth.user.user.token
+        cookies.set("user", newUser);
+        dispatch(getUserAuthSuccess(newUser));
         dispatch(postExpenseSuccess());
         window.location.reload();
       } else {
