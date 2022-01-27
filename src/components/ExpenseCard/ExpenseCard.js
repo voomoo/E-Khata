@@ -88,5 +88,4 @@ const ExpenseCard = ({ id, title, date, description, amount, category, icon, col
     </div>
   );
 };
-
 export default ExpenseCard;

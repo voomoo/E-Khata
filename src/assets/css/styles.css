@@ -124,5 +124,7 @@
   text-transform: capitalize;
 }
 
-
+.recharts-legend-wrapper{
+  bottom: 5px !important;
+}
 
