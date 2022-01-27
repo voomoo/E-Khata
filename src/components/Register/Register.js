@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 //import redux stuff
 import { useDispatch } from "react-redux";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 //import redux asynchrounas function
 import { registerUser } from "../../_redux/slices/authSlice";
@@ -87,6 +87,9 @@ const Register = () => {
                   onChange={(e) => setCPassword(e.target.value)}
                 />
               </Form.Field>
+              <p>
+                Already have an account? <Link to="/login">Login</Link>
+              </p>
               <Button className="login_btn" fluid type="submit">
                 Register
               </Button>
